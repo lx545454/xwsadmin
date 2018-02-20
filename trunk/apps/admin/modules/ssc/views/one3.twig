@@ -1,0 +1,135 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+    <div class="span12">
+        <div class="box box-color box-bordered">
+            <div class="box-title">
+                <h3>
+                    重庆时时彩<!--{{yes}}-->----<!--{{no}}-->
+                </h3>
+                <div class="actions">
+                    <form action="<!--{{url('ssc/home/one3')}}-->" class="">
+                        <table class="table-filter">
+                            <tr>
+                                <td>
+                                    <input name="qici" type="text" class="input-medium" placeholder="期次" value="<!--{{search.qici}}-->">
+                                    <input name="count" type="text" class="input-medium" placeholder="条数" value="<!--{{search.count}}-->">
+                                </td>
+                                <td><button class="btn btn-teal">查询</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="box-content nopadding">
+                <table class="table table-hover table-nomargin">
+                    <thead>
+                    <tr>
+                        <th class="col-120">前三</th>
+                        <th class="col-60">前三</th>
+                        <th class="col-60">前三三星</th>
+                        <th class="col-60">拆分</th>
+                        <th class="col-120">中三</th>
+                        <th class="col-60">中三</th>
+                        <th class="col-60">中三三星</th>
+                        <th class="col-60">拆分</th>
+                        <th class="col-120">后三</th>
+                        <th class="col-60">后三</th>
+                        <th class="col-60">后三三星</th>
+                        <th class="col-60">拆分</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <ol>
+                                <!--{%for item in data.0%}-->
+                                <li><!--{{item.qici}}-->  <!--{{item.num}}--></li>
+                                <!--{%endfor%}-->
+                            </ol>
+                        </td>
+                        <td>
+                                <!--{%for item in data.0%}-->
+                                <!--{{item.num}}--><br>
+                                <!--{%endfor%}-->
+                        </td>
+                        <td>
+                            <!--{%for i in data.sanxin.0%}-->
+                            <!--{{i}}-->&nbsp;
+                            <!--{%endfor%}-->
+                        </td>
+                        <td>
+                            <!--{{data.arr1}}-->
+                        </td>
+
+                        <td>
+                            <ol>
+                                <!--{%for item in data.1%}-->
+                                <li><!--{{item.qici}}-->  <!--{{item.num}}--></li>
+                                <!--{%endfor%}-->
+                            </ol>
+                        </td>
+                        <td>
+                            <!--{%for item in data.1%}-->
+                            <!--{{item.num}}--><br>
+                            <!--{%endfor%}-->
+                        </td>
+                        <td>
+                            <!--{%for i in data.sanxin.1%}-->
+                            <!--{{i}}-->&nbsp;
+                            <!--{%endfor%}-->                        </td>
+                        <td>
+                            <!--{{data.arr2}}-->
+                        </td>
+
+                        <td>
+                            <ol>
+                                <!--{%for item in data.2%}-->
+                                <li><!--{{item.qici}}-->  <!--{{item.num}}--></li>
+                                <!--{%endfor%}-->
+                            </ol>
+                        </td>
+                        <td>
+                            <!--{%for item in data.2%}-->
+                            <!--{{item.num}}--><br>
+                            <!--{%endfor%}-->
+                        </td>
+                        <td>
+                            <!--{%for i in data.sanxin.2%}-->
+                            <!--{{i}}-->&nbsp;
+                            <!--{%endfor%}-->                        </td>
+                        <td>
+                            <!--{{data.arr3}}-->
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="pagelink">
+                    <!--{{pagelinks}}-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--{%endblock%}-->
+
+<!--{%block footer_js%}-->
+<script>
+    $(function(){
+        $(".ajax-del").click(function(){
+            var obj = $(this);
+            var id = $(this).data('id');
+
+            if(!confirm("是否删除？")){
+                return false;
+            }
+            $.post('<!--{{url('ssc/anchor/ajax-del')}}-->',{id:id},function(data){
+                if(data.success == 'true'){
+                    window.location.href = window.location.href;
+                }
+            },"json");
+        });
+    });
+</script>
+<script src="/static/js/laydate/laydate.js"></script>
+<!--{%endblock%}-->

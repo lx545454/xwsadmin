@@ -1,0 +1,103 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+    <div class="span12">
+        <div class="box box-color box-bordered">
+            <div class="box-title">
+                <h3>
+                    主播数据
+                </h3>
+                <div class="actions">
+                    <form action="<!--{{url('conference/vdo/list')}}-->" class="">
+                        <table class="table-filter">
+                            <tr>
+                                <input name="nickname" type="hidden" class="input-medium" placeholder="场次ID" value="<!--{{search.nickname}}-->">
+                                <input name="uid" type="hidden" class="input-medium" placeholder="场次ID" value="<!--{{search.uid}}-->">
+                                <input name="room_id" type="hidden" class="input-medium" placeholder="场次ID" value="<!--{{search.room_id}}-->">
+                                <td><span class="label label-blue">主播昵称：<!--{{ search.nickname }}--></span></td>
+                                <td><span class="label label-blue">UID：<!--{{ search.uid }}--></span></td>
+                                <td><span class="label label-blue">房间ID：<!--{{ search.room_id }}--></span></td>
+                                <td>
+                                    <input name="vdo_id" type="text" class="input-medium" placeholder="场次ID" value="<!--{{search.vdo_id}}-->">
+                                </td>
+                                <td><span class="label label-blue">开始时间</span>
+                                    <div class="input-append date " >
+                                        <input name="start_time" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" type="text" class="input-medium datetimepicker" id="date_timepicker_start" value="<!--{{search.start_time}}-->" readonly>
+                                        <span class="add-on"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </td>
+                                <td><span class="label label-blue">结束时间</span>
+                                    <div class="input-append date "  data-date="">
+                                        <input name="stop_time" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" type="text" class="input-medium datetimepicker"  value="<!--{{search.stop_time}}-->" id="date_timepicker_end" readonly>
+                                        <span class="add-on"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </td>
+                                <td><button class="btn btn-teal">查询</button></td>
+                                <td><a class="btn btn-teal" href="">导出</a></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="box-content nopadding">
+                <table class="table table-hover table-nomargin">
+                    <thead>
+                    <tr>
+                        <th class="col-120">场次ID</th>
+                        <th class="col-120">场次名称</th>
+                        <th class="col-120">游戏类型</th>
+                        <th class="col-120">开播时间</th>
+                        <th class="col-120">直播时长</th>
+                        <th class="col-120">狮毛</th>
+                        <th class="col-120">狮牙</th>
+                        <th class="col-120">推流终端</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--{%for item in datalist%}-->
+                    <tr>
+                        <td><!--{{item.id}}--></td>
+                        <td><!--{{item.name}}--></td>
+                        <td><!--{{item.game_name}}--></td>
+                        <td><!--{{item.start_time}}--></td>
+                        <td><!--{{item.duration}}--></td>
+                        <td><!--{{item.coin}}--></td>
+                        <td><!--{{item.cash}}--></td>
+                        <td><!--{{item.client_type}}--></td>
+                    </tr>
+                    <!--{%endfor%}-->
+                    </tbody>
+                </table>
+                <div style="float: right;margin-right: 20px">
+                    总狮毛：<!--{{ total_coin }}--><br>
+                    总狮牙：<!--{{ total_cash }}-->
+                </div>
+                <div class="pagelink">
+                    <!--{{pagelinks}}-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--{%endblock%}-->
+
+<!--{%block footer_js%}-->
+<script>
+    $(function(){
+        $(".ajax-del").click(function(){
+            var obj = $(this);
+            var id = $(this).data('id');
+
+            if(!confirm("是否删除？")){
+                return false;
+            }
+            $.post('<!--{{url('conference/anchor/ajax-del')}}-->',{id:id},function(data){
+                if(data.success == 'true'){
+                    window.location.href = window.location.href;
+                }
+            },"json");
+        });
+    });
+</script>
+<script src="/static/js/laydate/laydate.js"></script>
+<!--{%endblock%}-->

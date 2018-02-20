@@ -1,0 +1,72 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block header_css%}-->
+<link rel="stylesheet" href="/static/css/plugins/tagsinput/jquery.tagsinput.css">
+<!--{%endblock%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+    <div class="span12">
+		<div class="box">
+			<div class="box-title">
+				<h3><i class="icon-edit"></i>最低提现金额</h3>
+			</div>
+			<div class="box-content">
+			    <form id="form_column" action="<!--{{url('')}}-->" method="POST" class='form-horizontal form-validate' enctype="multipart/form-data">
+
+                <div class="control-group">
+                    <label><b>提现设置&规则说明</b><br><br>设置提现最低金额，即满足该金额方可提现。达到最低金额后，提现金额必须为10的整数倍方可提现，例：50,60,70..</label>
+                    <div class="controls">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label"><b>最低提现金额：</b></label>
+                    <div class="controls">
+                        <input type="text" id="cash" class="input-small" value="<!--{{cash}}-->" />元，10的整数倍
+                        <input type="button" CLASS="btn-primary tijiao_cash" value="保存金额" />
+                    </div>
+                </div>
+
+			    <div class="form-actions">
+                    <input type="hidden" name="id" value="<!--{{data.id}}-->"/>
+                    <input type="hidden" name="liveId" value="<!--{{liveId}}-->"/>
+				</div>
+			    </form>
+			</div>
+		</div>
+    </div>
+</div>
+
+<!--{%endblock%}-->
+
+<!--{%block footer_js%}-->
+<script src="<!--{{asset('/static/js/ueditor/ueditor.config.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/ueditor/ueditor.all.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/ueditor/lang/zh-cn/zh-cn.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/plugins/tagsinput/jquery.tagsinput.min.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/plugins/jquery-ui/jquery-ui-1.9.2.custom.min.js')}}-->"></script>
+<script src="/static/js/ajaxfileupload.js"></script>
+<script>
+    var img_path;
+$(function(){
+
+    $(".tijiao_cash").click(function(){
+        var cash = $("#cash").val();
+        if(!cash){
+            alert("金额不能传空！");return fasle;
+        }
+        $.post('<!--{{url('tuiguang/home/ajax-cash-setup')}}-->',{confKey:"duoyouCashLimit",confValue:cash*100},function(data){
+            if(data.success){
+                alert("修改成功！");
+            }else{
+                alert(data.data);
+            }
+        },"json")
+    })
+});
+$('input').iCheck({
+    checkboxClass: 'icheckbox_square-orange',
+    radioClass: 'iradio_square-orange',
+    increaseArea: '20%' // optional
+});
+$('.switchbox').bootstrapSwitch();
+</script>
+<!--{%endblock%}-->

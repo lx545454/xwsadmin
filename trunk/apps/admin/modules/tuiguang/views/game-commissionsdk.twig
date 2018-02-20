@@ -1,0 +1,232 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block header_css%}-->
+<link rel="stylesheet" href="/static/css/plugins/tagsinput/jquery.tagsinput.css">
+<!--{%endblock%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+    <div class="span12">
+		<div class="box">
+			<div class="box-title">
+				<h3><i class="icon-edit"></i>分成设置</h3>
+			</div>
+			<div class="box-content">
+			    <form id="form_column" action="#nogo" method="POST" class='form-horizontal form-validate' enctype="multipart/form-data">
+
+                    <div class="control-group">
+                        <label class="control-label"><h4><b>直充分成</b></h4></label>
+                        <div class="controls">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">独立分成：</label>
+                        <div class="controls">
+							<label class="radio inline" style="margin-left: -18px"><!--{{form_radio('radio_zc','count',noStepArr.feeType=="0")}}-->定额分成<input type="text" id="zc_count"  class="input-small" value="<!--{{noStepArr.count}}-->" /></label>
+                            <label class="radio inline"><!--{{form_radio('radio_zc','prop',noStepArr.feeType=="1")}}-->百分比分成<input type="text" id="zc_prop" class="input-small" value="<!--{{noStepArr.prop}}-->" />%</label>
+							<input type="hidden" class="pid" value="<!--{{item.percentageId}}-->"  />
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">独立分成上限：</label>
+                        <div class="controls">
+                            <label class="radio inline">
+                                <input type="text" id="upperLimitShow2" name="upperLimitShow2" class="input-small" value="<!--{{upperLimit}}-->" />（元）
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="submit2" class="btn btn-primary"><i class="icon-ok"></i>保存</button>
+                        <a href="<!--{{url('tuiguang/home/commission-gamelist')}}-->" class="btn btn-primary">返回</a>
+                    </div>
+
+
+
+			    </form>
+			</div>
+		</div>
+    </div>
+</div>
+
+<!--{%endblock%}-->
+
+<!--{%block footer_js%}-->
+<script src="<!--{{asset('/static/js/ueditor/ueditor.config.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/ueditor/ueditor.all.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/ueditor/lang/zh-cn/zh-cn.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/plugins/tagsinput/jquery.tagsinput.min.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/plugins/jquery-ui/jquery-ui-1.9.2.custom.min.js')}}-->"></script>
+<script src="/static/js/ajaxfileupload.js"></script>
+<script>
+    function bean(gameRefId,gameId,actionId,feeType,feeValueShow,upperLimitShow,isStep,amountBeginShow,amountEndShow,percentageId,isActive)
+    {
+        this.gameRefId=gameRefId;
+        this.gameId=gameId;
+        this.actionId=actionId;
+        this.feeType=feeType;
+        this.feeValueShow=feeValueShow;
+        this.upperLimitShow=upperLimitShow;
+        this.currencyType = 2;
+        this.translatType =2;
+        this.exclusive = "false";
+        this.isStep = isStep;
+        this.amountBeginShow = amountBeginShow;
+        this.amountEndShow = amountEndShow;
+        this.percentageId = percentageId;
+        this.isActive = isActive;
+    }
+
+$(function(){
+    var isStep = "FALSE";
+    var del_pid = new Array();
+    $("#submit1").click(function(){
+        var list = new Object();
+        var gamePercentageBeanList = "";
+        var actionId = 'DUOYOU';
+        var exclusive = 'false';
+        var feeValueShow = "";
+        var feeType = "0";
+        var upperLimitShow = $("#upperLimitShow1").val();
+        var percentageId = $(this).find(".pid").val();
+        if(isStep == "FALSE"){
+           var radio_gd = $("input[name='radio_gd']:checked").val();//radio的取值
+            if(radio_gd == "count"){
+                feeValueShow = $("#gd_count").val();
+                feeType = "0";
+            }else{
+                feeValueShow = $("#gd_prop").val();
+                feeType = "1";
+            }
+            if(!feeValueShow){
+                alert("不能传空");return false;
+            }
+            list[0] =new bean('<!--{{data.gameRefId}}-->','<!--{{data.gameId}}-->',"DUOYOU",feeType,feeValueShow,upperLimitShow,isStep,"","",percentageId,"true");
+
+        }else{
+            $(".tf").find(".tr").each(function(k,v){
+                var startNum = $(this).find(":text").eq(0).val();
+                var endNum = $(this).find(":text").eq(1).val();
+                var val = $(this).find("input:checked").val();
+                var percentageId = $(this).find(".pid").val();
+                if(val == "count"){
+                    feeValueShow = $(this).find(".jt_rmbReward").val();
+                    feeType = "0";
+                }else{
+                    feeValueShow = $(this).find(".jt_rmbRate").val();
+                    feeType = "1";
+                }
+
+                list[k] =new bean('<!--{{data.gameRefId}}-->','<!--{{data.gameId}}-->',"DUOYOU",feeType,feeValueShow,upperLimitShow,isStep,startNum,endNum,percentageId,"true");
+            })
+        }
+        gamePercentageBeanList = JSON.stringify(list);
+
+        $.post('<!--{{url('tuiguang/home/game-commission')}}-->',{url:'updateGame',gamePercentageBeanList:gamePercentageBeanList,gameRefId:'<!--{{data.gameRefId}}-->',gameId:'<!--{{data.gameId}}-->',actionId:"DUOYOU",currencyType:2,translatType:2,displayIndex:0},function(data){
+            if(data.success){
+                alert("修改成功！");
+            }else{
+                alert(data.data);
+            }
+        },"json")
+    })
+
+    $("#submit2").click(function(){
+        var list = new Object();
+        var gamePercentageBeanList = "";
+        var actionId = 'SDK_ANDROID';
+        var exclusive = 'false';
+        var feeValueShow = "";
+        var feeType = "0";
+        var upperLimitShow = $("#upperLimitShow2").val();
+
+        var radio_gd = $("input[name='radio_zc']:checked").val();//radio的取值
+        if(radio_gd == "count"){
+            feeValueShow = $("#zc_count").val();
+            feeType = "0";
+        }else{
+            feeValueShow = $("#zc_prop").val();
+            feeType = "1";
+        }
+        if(!feeValueShow){
+            alert("不能传空");return false;
+        }
+        list[0] =new bean('<!--{{data.gameRefId}}-->','<!--{{data.gameId}}-->',"SDK_ANDROID",feeType,feeValueShow,upperLimitShow,isStep,"","");
+
+        gamePercentageBeanList = JSON.stringify(list);
+
+
+        $.post('<!--{{url('tuiguang/home/game-commission')}}-->',{url:'updateGame',gamePercentageBeanList:gamePercentageBeanList,gameRefId:'<!--{{data.gameRefId}}-->',gameId:'<!--{{data.gameId}}-->',actionId:"SDK_ANDROID"},function(data){
+            if(data.success){
+                alert("修改成功！");
+                window.location.href="/tuiguang/home/commission-gamelistsdk"; 
+            }else{
+                alert(data.data);
+            }
+        },"json")
+    })
+
+
+
+    //控制分成
+    var fc1_val = $("input[name='fc1']:checked").val();
+    check_fc1(fc1_val);
+    function check_fc1(val){
+        if(val=="jt"){
+            $("#sp_gd").hide();
+            $("#sp_jt").show();
+            isStep = "TRUE";
+        }else{
+            $("#sp_gd").show();
+            $("#sp_jt").hide();
+            isStep = "FALSE";
+        }
+    }
+    $("input[name='fc1']").on('ifChecked',function(e){
+        var check_val = $(this).val();
+        radio_val = check_val;
+        check_fc1(radio_val);
+    })
+
+    $("input[name='radio_gd']").on('ifChecked',function(e){
+        var check_val = $(this).val();
+    })
+
+    $(".add_tr").click(function(){
+
+        $(".tf").append($("#td_model").html());
+        var length =  $(".tf").children().length+1;
+        
+        $(".tf").children().last().find("input[name='radio_jt']").each(function(){
+            $(this).attr("name",length);
+        })
+        $(".tf").children().last().find(".sp_k").html(length);
+        $('.tf input').iCheck({
+            checkboxClass: 'icheckbox_square-orange',
+            radioClass: 'iradio_square-orange',
+            increaseArea: '20%' // optional
+        });
+    })
+    $(".tf").on('click',".del_tr",function(){
+
+        del_pid.push($(this).attr("pid"));
+//        alert($(this).attr("pid"));
+//        for(var e in del_pid){
+//            alert(del_pid[e]);
+//        }
+
+//        $(this).parent().parent().remove();
+    })
+
+
+
+});
+
+$('input').iCheck({
+    checkboxClass: 'icheckbox_square-orange',
+    radioClass: 'iradio_square-orange',
+    increaseArea: '20%' // optional
+});
+$('.switchbox').bootstrapSwitch();
+</script>
+<!--{%endblock%}-->

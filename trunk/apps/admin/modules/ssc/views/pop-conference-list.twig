@@ -1,0 +1,82 @@
+<div class="box">
+    <div class="actions">
+        <table class="table-filter">
+	        <tr>				            
+	            <td>
+					<input id="name" type="text" class="input-medium" value="<!--{{search.name}}-->">
+				</td>
+				<td>
+				    <a href="javascript:search();" class="btn btn-teal">查询</a>
+				</td>
+			</tr>
+		</table>
+    </div>
+    <table class="table table-hover table-nomargin">
+        <thead>
+			<tr>
+			    <th class="col-60">ID</th>
+				<th class="col-150">公会名称</th>
+				<th class="table-btn-group">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		    <!--{%for item in data%}-->
+			<tr>
+				<td><!--{{item.id}}--></td>
+				<td><!--{{item.name}}--></td>
+				<td>
+				    <a href="javascript:void(0);" data-id="<!--{{item.id}}-->" data-name="<!--{{item.name}}-->" class="btn btn-primary select-id">选择</a>
+				</td>
+			</tr>
+			<!--{%endfor%}-->
+		</tbody>
+    </table>
+    <div class="pagelink">
+        <!--{{pagelinks}}-->
+    </div>
+</div>    
+    <script>
+    function search()
+    {
+        var name = $('#name').val();
+        $.ajax({
+            url:'/conference/anchor/json-search',
+            data:{name:name},
+            dataType:'json',
+            success:function(json){
+                var html = '';
+                html = json.html;
+                $.dialog.list['pop-conference-list'].content(html);
+            }
+        });
+    }
+    function init_page()
+    {
+        $('.select-id').each(function(){
+            $(this).click(function(){
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+                set_selected(id, name);
+                $.dialog.list['pop-conference-list'].close();
+            });
+        });
+
+        $('.pagelink a').each(function(){
+            var url = $(this).attr('href');            
+            $(this).attr('href','javascript:void(0);');
+            $(this).click(function(){
+                $.ajax({
+                    url:url,
+                    dataType:'json',
+		            success:function(json){
+		                var html = '';
+		                html = json.html;
+		                $.dialog.list['pop-conference-list'].content(html);
+		            }
+                });
+            });
+            
+        });
+    }
+    init_page();
+    </script>

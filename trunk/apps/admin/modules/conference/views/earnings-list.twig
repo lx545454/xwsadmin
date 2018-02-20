@@ -1,0 +1,80 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+    <div class="span12">
+        <div class="box box-color box-bordered">
+            <div class="box-title">
+                <h3>
+                    收益列表
+                </h3>
+                <div class="actions">
+                    <form id="myForm" action="<!--{{url('conference/earnings/list')}}-->" class="">
+                        <table class="table-filter">
+                            <tr>
+                                <td>
+                                    <input name="name" type="text" class="input-medium" placeholder="公会名称" value="<!--{{search.name}}-->">
+                                </td>
+                                <td>
+                                    <input name="roomId" type="text" class="input-medium" placeholder="房间ID" value="<!--{{search.roomId}}-->">
+                                </td>
+                                <td><button class="btn btn-teal">查询</button></td>
+                                <td><a class="btn btn-teal" data-url="<!--{{url('conference/earnings/excel')}}-->" id="daochu">导出</a></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="box-content nopadding">
+                <table class="table table-hover table-nomargin">
+                    <thead>
+                    <tr>
+                        <th class="col-120">UID</th>
+                        <th class="col-120">主播昵称</th>
+                        <th class="col-120">房间ID</th>
+                        <th class="col-120">公会名称</th>
+                        <!--<th class="col-120">天数</th>-->
+                        <th class="col-120">时长</th>
+                        <th class="col-120">狮毛</th>
+                        <th class="col-120">狮牙</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--{%for item in datalist%}-->
+                    <tr>
+                        <td><!--{{item.uid}}--></td>
+                        <td><!--{{item.nickname}}--></td>
+                        <td><!--{{item.room_id}}--></td>
+                        <td><!--{{item.name}}--></td>
+                        <!--<td></td>-->
+                        <td><!--{{item.duration}}--></td>
+                        <td><!--{{item.coin}}--></td>
+                        <td><!--{{item.cash}}--></td>
+                    </tr>
+                    <!--{%endfor%}-->
+                    </tbody>
+                </table>
+                <div style="float: right;margin-right: 20px">
+                    总狮毛：<!--{{ total_coin }}--><br>
+                    总狮牙：<!--{{ total_cash }}-->
+                </div>
+                <div class="pagelink">
+                    <!--{{pagelinks}}-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--{%endblock%}-->
+
+<!--{%block footer_js%}-->
+<script>
+    $(function(){
+        $("#daochu").on('click',function(){
+            var url = $(this).data('url');
+            console.log(url);
+            window.location.href = url + '?' + $("#myForm").serialize();
+        })
+    });
+</script>
+<script src="/static/js/laydate/laydate.js"></script>
+<!--{%endblock%}-->

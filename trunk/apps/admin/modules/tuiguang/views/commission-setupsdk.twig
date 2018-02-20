@@ -1,0 +1,81 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block header_css%}-->
+<link rel="stylesheet" href="/static/css/plugins/tagsinput/jquery.tagsinput.css">
+<!--{%endblock%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+    <div class="span12">
+		<div class="box">
+			<div class="box-title">
+				<h3><i class="icon-edit"></i>直充分成设置</h3>
+			</div>
+			<div class="box-content">
+			    <form id="form_column" action="<!--{{url('')}}-->" method="POST" class='form-horizontal form-validate' enctype="multipart/form-data">
+
+                <div class="control-group">
+                    <label class="control-label">直充分成：</label>
+                    <div class="controls">
+                        <label class="radio inline" style="margin-left: -18px"><!--{{form_radio('fc3','count',sdk.feeType=="0")}}-->人民币数量(元) <input type="text" name="rmbReward3" class="input-small" value="<!--{{sdk.rmbReward}}-->" /></label>
+                        <label class="radio inline"><!--{{form_radio('fc3','prop',sdk.feeType=="1")}}-->人民币比例 <input type="text" name="rmbRate3" class="input-small" value="<!--{{sdk.rmbRate}}-->" /> % （精确到0.01%）</label>
+                        <!-- <label class="radio inline">分成上限<input type="text" name="upperLimit3" class="input-small" value="<!--{{sdk.upperLimitShow}}-->" /></label> -->
+                        <input type="button" CLASS="btn-primary tijiao_rmb3" did="<!--{{sdk.defaultId}}-->" value="保存人民币" />
+                    </div>
+                </div>
+
+			    <div class="form-actions">
+                    <input type="hidden" name="id" value="<!--{{data.id}}-->"/>
+                    <input type="hidden" name="liveId" value="<!--{{liveId}}-->"/>
+				</div>
+			    </form>
+			</div>
+		</div>
+    </div>
+</div>
+
+<!--{%endblock%}-->
+
+<!--{%block footer_js%}-->
+<script src="<!--{{asset('/static/js/ueditor/ueditor.config.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/ueditor/ueditor.all.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/ueditor/lang/zh-cn/zh-cn.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/plugins/tagsinput/jquery.tagsinput.min.js')}}-->"></script>
+<script src="<!--{{asset('/static/js/plugins/jquery-ui/jquery-ui-1.9.2.custom.min.js')}}-->"></script>
+<script src="/static/js/ajaxfileupload.js"></script>
+<script>
+    var img_path;
+$(function(){
+
+    $(".tijiao_rmb3").click(function(){
+        var check_val =$("input[name='fc3']:checked").val();
+        var defaultId = $(this).attr("did");
+        var upperLimit=$("input[name='upperLimit3']").val();
+        if(!upperLimit){
+            upperLimit = "9999999";
+        }
+        var feeType = 1;
+        var feeValueShow = $("input[name='rmbRate3']").val();
+        if(check_val=="count"){
+            feeType = 0;
+            feeValueShow = $("input[name='rmbReward3']").val();
+        }
+        if(!feeValueShow){
+            alert("不能传空");
+        }
+        $.post('<!--{{url('tuiguang/home/ajax-commission-setup')}}-->',{defaultId:defaultId,currencyType:"2",feeType:feeType,feeValueShow:feeValueShow,upperLimitShow:upperLimit},function(data){
+            if(data.success){
+                alert("修改成功！");
+            }else{
+                alert(data.data);
+            }
+        },"json")
+    })
+
+});
+$('input').iCheck({
+    checkboxClass: 'icheckbox_square-orange',
+    radioClass: 'iradio_square-orange',
+    increaseArea: '20%' // optional
+});
+$('.switchbox').bootstrapSwitch();
+</script>
+<!--{%endblock%}-->

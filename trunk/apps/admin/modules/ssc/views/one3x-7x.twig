@@ -1,0 +1,84 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+    <div class="span12">
+        <div class="box box-color box-bordered">
+            <div class="box-title">
+                <h3>
+                    重庆时时彩<!--{{yes}}-->----<!--{{no}}-->
+                </h3>
+		
+                <div class="actions">
+                    <form action="<!--{{url('ssc/home/one3x7x')}}-->" class="">
+                        <table class="table-filter">
+                            <tr>
+                                <td>
+                                    <input name="qici" type="text" class="input-medium" placeholder="期次" value="<!--{{search.qici}}-->">
+                                    <input name="count" type="text" class="input-medium" placeholder="条数" value="<!--{{search.count}}-->">
+                                </td>
+                                <td><button class="btn btn-teal">查询</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="box-content nopadding">
+                <table class="table table-hover table-nomargin">
+                    <thead>
+                    <tr>
+                        <th class="col-120">期次</th>
+                        <th class="col-120">开奖号</th>
+                        <th class="col-120">前三(<!--{{data.arr1_count}}-->)</th>
+                        <th class="col-30">对错</th>
+                        <th class="col-120">中三(<!--{{data.arr2_count}}-->)</th>
+                        <th class="col-30">对错</th>
+                        <th class="col-120">后三(<!--{{data.arr3_count}}-->)</th>
+                        <th class="col-30">对错</th>
+                        <th class="col-120">和三(<!--{{data.arrAll_count}}-->)</th>
+                        <th class="col-30">对错</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><!--{{data.qici}}--></td>
+                        <td><!--{{data.num}}--></td>
+                        <td><!--{{data.str1}}--></td>
+                        <td><!--{{rule[data.zai1_7]}}--></td>
+                        <td><!--{{data.str2}}--></td>
+                        <td><!--{{rule[data.zai2_7]}}--></td>
+                        <td><!--{{data.str3}}--></td>
+                        <td><!--{{rule[data.zai3_7]}}--></td>
+                        <td><!--{{data.strAll}}--></td>
+                        <td><!--{{rule[data.zai]}}--></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="pagelink">
+                    <!--{{pagelinks}}-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--{%endblock%}-->
+
+<!--{%block footer_js%}-->
+<script>
+    $(function(){
+        $(".ajax-del").click(function(){
+            var obj = $(this);
+            var id = $(this).data('id');
+
+            if(!confirm("是否删除？")){
+                return false;
+            }
+            $.post('<!--{{url('ssc/anchor/ajax-del')}}-->',{id:id},function(data){
+                if(data.success == 'true'){
+                    window.location.href = window.location.href;
+                }
+            },"json");
+        });
+    });
+</script>
+<script src="/static/js/laydate/laydate.js"></script>
+<!--{%endblock%}-->

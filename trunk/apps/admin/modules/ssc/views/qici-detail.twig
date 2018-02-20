@@ -1,0 +1,90 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+    <div class="span12">
+        <div class="box box-color box-bordered">
+            <div class="box-title">
+                <h3>
+                    订单列表
+                </h3>
+                <div class="actions">
+                    <form action="<!--{{url('ssc/anchor/list')}}-->" class="">
+                        <table class="table-filter">
+                            <tr>
+                                <td>
+                                    <input name="id" type="text" class="input-medium" placeholder="房间ID" value="<!--{{search.id}}-->">
+                                </td>
+                                <td><button class="btn btn-teal">查询</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="box-content nopadding">
+                <table class="table table-hover table-nomargin">
+                    <thead>
+                    <tr>
+                        <th class="col-120">期次</th>
+                        <th class="col-120">开始时间</th>
+                        <th class="col-120">结束时间</th>
+                        <th class="col-120">奖池</th>
+                        <th class="col-120">返奖率</th>
+                        <th class="col-120">开奖号码</th>
+                        <th class="col-120">状态</th>
+                        <th class="table-btn-group">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--{%for item in datalist%}-->
+                    <tr>
+                        <td><!--{{item.qici}}--></td>
+                        <td><!--{{item.createTime}}--></td>
+                        <td><!--{{item.endTime}}--></td>
+                        <td><!--{{item.money}}--></td>
+                        <td><!--{{item.peilv}}--></td>
+                        <td><!--{{item.number}}--></td>
+                        <td><!--{{item.state}}--></td>
+                        <td>
+
+                            <!--{%if item.state %}-->
+                            <a href="<!--{{url('ssc/home/inqici')}}-->?qici=<!--{{item.qici}}-->" class="btn btn-drop btn-primary">查看</a>
+
+                            <!--{% else %}-->
+                            <a href="<!--{{url('ssc/anchor/add')}}-->?id=<!--{{item.id}}-->" class="btn btn-drop btn-primary">编辑</a>
+                            <a href="<!--{{url('ssc/vdo/list')}}-->?nickname=<!--{{item.roomInfo.nickname}}-->&uid=<!--{{ item.roomInfo.uid }}-->&room_id=<!--{{ item.roomId }}-->" class="btn btn-drop btn-primary">查看</a>
+                            <a data-id="<!--{{item.id}}-->" class="btn btn-drop btn-danger ajax-del">删除</a>
+                            <!--{%endif%}-->
+                        </td>
+                    </tr>
+                    <!--{%endfor%}-->
+                    </tbody>
+                </table>
+                <div class="pagelink">
+                    <!--{{pagelinks}}-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--{%endblock%}-->
+
+<!--{%block footer_js%}-->
+<script>
+    $(function(){
+        $(".ajax-del").click(function(){
+            var obj = $(this);
+            var id = $(this).data('id');
+
+            if(!confirm("是否删除？")){
+                return false;
+            }
+            $.post('<!--{{url('ssc/anchor/ajax-del')}}-->',{id:id},function(data){
+                if(data.success == 'true'){
+                    window.location.href = window.location.href;
+                }
+            },"json");
+        });
+    });
+</script>
+<script src="/static/js/laydate/laydate.js"></script>
+<!--{%endblock%}-->

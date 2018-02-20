@@ -1,0 +1,57 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+    <div class="span12">
+        <div class="box">
+            <div class="box-title">
+                <h3><i class="icon-edit"></i>添加&编辑主播</h3>
+            </div>
+
+            <div class="box-content">
+                <form id="gift-info-form" action="<!--{{url('/conference/anchor/add')}}-->" method="POST" class='form-horizontal form-validate' enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="<!--{{ data.id }}-->"/>
+
+                    <div class="control-group" >
+                        <label class="control-label">房间ID</label>
+                        <div class="controls">
+                            <input type="text" name="roomId" class="input-large"  value="<!--{{data.roomId}}-->"/>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">选择公会</label>
+                        <div class="controls"><!-- has-error -->
+                            <input id="selected_name" type='text' class='input-large showModel' value="<!--{{data.name}}-->" readonly onclick="add_pop()"/>
+                            <input id="selected_id" type="hidden" name="cId" value="<!--{{data.cId}}-->"/>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--{%endblock%}-->
+    <!--{%block footer_js%}-->
+    <script>
+        var set_selected=function(id,name){
+            $('#selected_id').val(id);
+            $('#selected_name').val(name);
+
+        };
+
+        function add_pop() {
+            $.ajax({
+                url:'/conference/anchor/json-search',
+                dataType:'json',
+                success:function(json){
+                    var html = json.html;
+                    $.dialog({id:'pop-conference-list',title:'选择公会',padding:2,content:html,width:450,height:300});
+                }
+            });
+        }
+    </script>
+    <!--{%endblock%}-->

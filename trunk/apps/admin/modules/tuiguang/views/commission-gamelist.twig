@@ -1,0 +1,129 @@
+<!--{%extends "base-layout.twig"%}-->
+<!--{%block main_content%}-->
+<div class="row-fluid">
+	<div class="span12">
+	    <div class="box box-color box-bordered">
+			<div class="box-title">
+				<h3>
+					<i class="icon-table"></i>
+					游戏列表
+					<span class="badge badge-warning"></span>
+				</h3>
+				<div class="actions">
+				    <form action="<!--{{url('tuiguang/home/commission-gamelist')}}-->">
+				    <table class="table-filter">
+				        <tr>
+							<td><input type="text" name="gameName" id="gameName" class="input-medium" placeholder="游戏名" value="<!--{{search.gameName}}-->"/> </td>
+				            <td><button class="btn btn-teal"><i class="icon-search"></i>搜索</button></td>
+				            <td><a href="#nogo" class="btn btn-teal select-pop-game">添加游戏</a></td>
+				        </tr>
+				    </table>
+				    </form>
+				</div>
+			</div>
+			<div class="box-content nopadding">
+			    <table class="table table-hover table-nomargin">
+			        <thead>
+						<tr>
+						    <th class="col-50">游戏ID</th>
+							<th class="col-100">游戏名</th>
+							<!-- <th class="col-60">游戏icon</th> -->
+						    <th class="col-50">充值分成</th>
+							<th class="col-100">操作</th>
+						</tr>
+					</thead>
+					<tbody id="tbody">
+					    <!--{%for item in datalist%}-->
+						<tr>
+							<td width="50px;"><!--{{item.gameRefId}}--></td>
+							<td><!--{{item.gameName}}--></td>
+							<!-- <td class="game-avatar"><img src="<!--{{item.gameIcon|default('/gamedirs/common/avatar@2x.png?v=3')}}-->" /></td> -->
+							<td><!--{{item.zc}}--></td>
+	                        <td>
+	                            <a href="<!--{{url('tuiguang/home/game-commission')}}-->?gameRefId=<!--{{item.gameRefId}}-->&gameId=<!--{{item.gameId}}-->" class="btn btn-primary">编辑</a>
+	                        </td>
+						</tr>
+						<!--{%endfor%}-->
+					</tbody>
+			    </table>
+			    <div class="pagelink">
+			        <!--{{pagelinks}}-->
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+    
+<!--{%endblock%}-->
+<!--{%block footer_js%}-->
+<script>
+    var tr_html = '<tr>\
+            <td width="50px;" ></td>\
+            <td></td>\
+            <td class="game-avatar"><img src="" /></td>\
+            <td></td>\
+            <td></td>\
+            <td>\
+            <a href="<!--{{url('tuiguang/home/game-commission')}}-->" class="btn btn-primary">编辑</a>\
+            </td>\
+            </tr>';
+
+	$(function(){
+        $('.select-pop-game').bind('click',function(){
+            $.ajax({
+                url:'/adv/core/gamesdk-search',
+                dataType:'json',
+                success:function(json){
+                    var html = json.html;
+                    $.dialog({id:'pop-game-list',title:'提示',padding:2,content:html,width:600,height:580});
+                }
+            });
+        });
+
+
+
+	    });
+    var set_selected_game=function(game_id,game_name,icon,i,packageName){
+        if(game_id){
+
+//            $("#tbody").prepend(tr_html);
+//            $("#tbody").children().first().children().each(function(k,v){
+//                if(k == 0){
+//                    $(this).html(game_id);
+//                }else if(k == 1){
+//                    $(this).html(game_name);
+//                }else if(k == 2){
+//                    $(this).children().attr("src",icon);
+//                }else if(k == 5){
+//                    var link =  $(this).children().attr("href")+"?gameRefId="+game_id;
+//                    $(this).children().attr("href",icon);
+//                }
+//            })
+
+            $.ajax({
+                type:"POST",
+                url:'/tuiguang/help/ajax-do',
+                dataType:'json',
+                data:{url:'addGame',gameRefId:game_id,gameName:game_name,gameIcon:icon,actionId:'DUOYOU',displayIndex:"0",currencyType:'2',translatType:'2'}
+            });
+
+            $.ajax({
+                type:"POST",
+                url:'/tuiguang/help/ajax-do',
+                dataType:'json',
+                data:{url:'addGame',gameRefId:game_id,gameName:game_name,gameIcon:icon,actionId:'SDK_ANDROID',displayIndex:"0",currencyType:'2',translatType:'2'},
+                success:function(data){
+                    if(data.data){
+                    	window.location.reload();
+                    } else {
+                        alert("该游戏已存在！");
+                    	window.location.reload();
+                    }
+                }
+            });
+
+        }
+    };
+</script>
+<!--{%endblock%}-->

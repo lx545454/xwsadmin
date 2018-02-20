@@ -1,0 +1,45 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name = "format-detection" content = "telephone=no">
+	<meta name="viewport"  content="width=device-width,user-scalable=no">
+	<link rel="stylesheet" href="/static/css/base.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+	<script src="/static/js/jquery.min.js"></script>
+
+</head>
+
+<body >
+
+<div class="wrap">
+	<header><a class="return"></a>新时彩</header>
+	<div class="list">
+		<ul>
+			<!--{%for item in data%}-->
+			<li>
+				<a>
+					<p><em>第<!--{{item.qici}}-->期</em><em><!--{{item.createTime}}--></em></p>
+					<span <!--{%if item.cur=="1"%}--> class="curr" <!--{%endif%}--> >
+						<!--{%for i in item.arr%}-->
+							<em><!--{{ i }}--></em>
+						<!--{%endfor%}-->
+						</span>
+					<em class="icon"></em>
+				</a>
+			</li>
+			<!--{%endfor%}-->
+		</ul>
+	</div>
+</div>
+
+</body>
+<script>
+    $(function(){
+        setTimeout(function(){
+			window.location.href=window.location.href;
+		},30000);
+    });
+</script>
+</html>
